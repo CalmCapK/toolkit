@@ -2,9 +2,10 @@
 Author: CalmCapK
 Date: 2022-09-20 00:25:06
 LastEditors: CalmCapK
-LastEditTime: 2022-09-20 01:58:09
+LastEditTime: 2022-09-25 20:42:39
 '''
 import os
+import shutil
 
 ################################# 介绍1：file #####################################
 def file_ext(filename, level=1):
@@ -46,10 +47,24 @@ def change_file_name(folder_path):
     '''
     files = os.listdir(folder_path)
     cnt = 0
+    #wenti= [str(i)+'.jpg' for i in range(70, 99)]
     for file in files:
-        print(file)
+        #if file in wenti:
+        print(file) 
         os.rename(os.path.join(folder_path, file), os.path.join(folder_path, str(cnt)+'.jpg'))
         cnt += 1
+
+def move_dir(path, new_path):
+    shutil.move(path, new_path)
+
+def copy_dir(path, new_path):
+    shutil.copytree(path, new_path)
+
+def remove_dir(path):
+    os.remove(path)
+
+def create_dir(path):
+    os.makedirs(path)
 
 ################################# 介绍2：xml #####################################
 from xml.etree.ElementTree import ElementTree
@@ -99,7 +114,6 @@ def write_file(filename, data):
         for d in data:
             fw.writelines(d)
 
-
 ################################# 介绍4：csv #####################################
 import csv
 
@@ -126,6 +140,19 @@ def write_xlsx(path, data):
     df = pd.DataFrame(data)
     df.to_excel(path)
 
+from openpyxl import load_workbook
+
+def read_xlsx_by_sheetindex(path, sheet_index):
+    wb = load_workbook(path)
+    sheet_names = wb.sheetnames
+    sheet = wb.get_sheet_by_name(sheet_names[sheet_index])
+    rows = sheet.rows
+    data = []
+    for row in rows:
+        col_value = [col.value for col in row]
+        data.append(col_value)
+    return data
+
 ################################# 介绍6：yml #####################################
 import yaml
 
@@ -135,6 +162,19 @@ def read_yml(path):
     return _cf
 
 ################################# 介绍7：py #####################################
+import json
+
+def read_json(path):
+    with open(path,'r', encoding='utf8')as fp:
+        json_data = json.load(fp)
+    return json_data
+
+def write_json(data, path):
+    json_str = json.dumps(data)
+    with open(path, 'w') as json_file:
+        json_file.write(json_str)
+
+################################# 介绍8：py #####################################
 import importlib
 
 def read_py(path):
@@ -143,58 +183,76 @@ def read_py(path):
 
 ################################# test #####################################
 def test_fun(op):
-    if op == 1:
+    if op == 1: #file op
         path = '/d/myfile/code/toolkit/test.py'
         print(file_ext(path))
-    if op == 2:
+    if op == 2: #file op
         path = 'D:\\myfile\\code\\toolkit\\test_directory_structure'
         f = get_files(path, is_recursive=True)
         print(f)
-    if op == 3:
+    if op == 3: #file op
         path = 'D:\\myfile\\code\\toolkit\\test_directory_structure'
         f = get_folders(path, is_recursive=True)
         print(f)
-    if op == 4:
+    if op == 4: #xml
         path = 'D:\\myfile\\code\\toolkit\\test_file_op\\a.xml'
         out_path = 'D:\\myfile\\code\\toolkit\\test_file_op\\b.xml'
         tree = read_xml(path)
         nodelist= find_nodes(tree, 'b')
         change_node_text(nodelist, '5', is_add=False, is_delete=False)
         write_xml(tree, out_path)
-    if op == 5:
+    if op == 5: #txt
         in_path = 'D:\\myfile\\code\\toolkit\\test_file_op\\a.txt'
         out_path = 'D:\\myfile\\code\\toolkit\\test_file_op\\b.txt'
         data = read_file(in_path)
         write_file(out_path, data)
-    if op == 6:
+    if op == 6: #csv
         in_path = 'D:\\myfile\\code\\toolkit\\test_file_op\\a.csv'
         out_path = 'D:\\myfile\\code\\toolkit\\test_file_op\\b.csv'
         data = [[1,2,"4"],[5,8,9]]
         write_csv(out_path, data)
-    if op == 7:
+    if op == 7: #xlsx
         in_path = 'D:\\myfile\\code\\toolkit\\test_file_op\\a.xlsx'
-        out_path = 'D:\\myfile\\code\\toolkit\\test_file_op\\b.xlsx'
-        data = [[1,2,"4"],[5,8,9]]
-        write_xlsx(out_path, data)
+        out_path = 'D:\\myfile\\code\\toolkit\\test_file_op\\pb.xlsx'
+        # data = [[1,2,"4"],[5,8,9]]
+        # write_xlsx(out_path, data)
         d = read_xlsx_row_by_index(out_path, 0)
         print(d)
         d = read_xlsx_col_by_index(out_path, 0)
         print(d)
-    if op == 8:
+        win_path = 'D:\\myfile\\code\\toolkit\\test_file_op\\win.xlsx'
+        wind = read_xlsx_by_sheetindex(win_path, 1)
+        print(wind)
+    if op == 8: #yml
         in_path = 'D:\\myfile\\code\\toolkit\\test_file_op\\a.yml'
         out_path = 'D:\\myfile\\code\\toolkit\\test_file_op\\b.yml'
         cfg = read_yml(in_path)
         print(cfg)
-    if op == 9:
+    if op == 9: #py
         in_path = 'test_file_op/a.py'
         out_path = 'D:\\myfile\\code\\toolkit\\test_file_op\\b.py'
         cfg = read_py(in_path)
         print(cfg.a)
-    if op == 10: #厨房笔记
+    if op == 10: #json
+        data = {'a':{1:"23", "12":34},'b':{3:4}}
+        path = 'D:\\myfile\\code\\toolkit\\test_file_op\\a.json'
+        write_json(data, path)
+        data = read_json(path)
+        print(data)
+    if op == 11: #厨房笔记
         #folder_path = 'D:\\myfile\\code\\toolkit\\test_file_op\\change_name'
-        folder_path = 'D:\myfile\code\\blog\source\\assets\img\cook\process\w9'
+        folder_path = 'D:\myfile\code\\blog\source\\assets\img\cook\process\w10'
         change_file_name(folder_path)
+    if op == 12:
+        old_dir = 'D:\\myfile\\code\\toolkit\\test_file_op'
+        new_dir = 'D:\\myfile\\code\\toolkit\\test_file_op2'
+        #move_dir(old_dir, new_dir) 
+        #copy_dir(old_dir, new_dir)
+        path = './1/2/3'
+        create_dir(path)
+        remove_dir(path)
+        
 
 if __name__=="__main__":    
-    op = 5
+    op = 11
     test_fun(op)
