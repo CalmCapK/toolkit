@@ -93,6 +93,7 @@ def getInfo(begin, cfg):
             cnt += 1
         print("公众号《{}》第{}页爬取成功".format(cfg["name"], begin))
     except:
+        print("公众号《{}》第{}页爬取异常".format(cfg["name"], begin))
         if result['base_resp']['ret'] == 200013:
             print("公众号《{}》抓取太频繁, 停在了第{}页".format(cfg["name"], begin))
             time.sleep(3600)
@@ -116,7 +117,7 @@ def process_single(cfg):
         if cnt > 50:
             global mp
             mp[cfg["name"]]["cnt"] = cnt
-            mp[cfg["name"]]["index"] = index
+            mp[cfg["name"]]["begin"] = index
             break
 
 def main():
@@ -131,9 +132,81 @@ def main():
             process_single(d) 
     print(mp)
 
+import csv
+import os
+def read_csv(path):
+    data = []
+    cnt = {}
+    with open(path, encoding='UTF-8') as csvfile:
+        csv_reader = csv.reader(csvfile)  # 使用csv.reader读取csvfile中的文件
+        for line in csv_reader:
+            #print(len(line))
+            if len(line) not in cnt:
+                cnt[len(line)] = 0
+            cnt[len(line)] += 1
+            data.append(line)
+
+    print(cnt)
+    return data
+
+import time
+
+def timestamp_convert_localdate(timestamp,time_format="%Y/%m/%d %H:%M:%S"):
+    # 按照当前设备时区来进行转换，比如当前北京时间UTC+8
+    timeArray = time.localtime(timestamp)
+    styleTime = time.strftime(str(time_format), timeArray)
+    return styleTime
+
+def write_md(path, data, name):
+    with open(path,'a+', encoding='UTF-8') as fw: # 打开文件  #write和writelines都不会自动换行
+        fw.writelines('## ' + name + '  \n')
+        for idx, d in enumerate(data):
+            fw.writelines('### ' + str(idx) + '.' + d[4] + '  \n')
+            fw.writelines(d[-3] + '  \n')
+            fw.writelines("create: " + timestamp_convert_localdate(int(d[-2]))  + '  \n')
+            fw.writelines("update: " + timestamp_convert_localdate(int(d[-1]))  + '  \n')
+
+def write_md2(path, data, ci):
+    with open(path,'a+', encoding='UTF-8') as fw: # 打开文件  #write和writelines都不会自动换行
+        fw.writelines('## ' + ci + '  \n')
+        for idx, d in enumerate(data):
+            fw.writelines('### 【' + d[0] + '】' + str(idx) + '.' + d[4] + '  \n')
+            #fw.writelines(d[0] + '  \n')
+            fw.writelines(d[-3] + '  \n')
+            fw.writelines("create: " + timestamp_convert_localdate(int(d[-2]))  + '  \n')
+            fw.writelines("update: " + timestamp_convert_localdate(int(d[-1]))  + '  \n')
+
+
+def csvtomd(path, out_path):
+    mp = {}
+    for ci in cihui:
+        mp[ci] = []
+    with open(out_path,'a+', encoding='UTF-8') as fw: # 打开文件  #write和writelines都不会自动换行
+        fw.writelines('# 公众号  \n')
+    for name in gongzhonghao_list[:-1]:
+        print(name["name"])
+        if name["name"] is not "模板":
+            data = read_csv(os.path.join(path, name["name"]+'.csv'))
+            write_md(out_path, data, name["name"])
+            for ci in mp.keys():
+                print(ci)
+                for d in data:
+                    if ci.lower() in d[4].lower():
+                        mp[ci].append(d)
+            #print(len(data))
+    with open(out_path,'a+', encoding='UTF-8') as fw: # 打开文件  #write和writelines都不会自动换行
+        fw.writelines('# 标签  \n')
+    for ci in cihui:
+        write_md2(out_path, mp[ci], ci)
+            
+
+
+
 if __name__ == '__main__':
-    main()
+    #main()
     # path = 'a.csv'
     # data = ["AI算法与图像处理",0,0,"2247522414_1","程明明：“生活歌者，一路向前”,把培养学生作为主要工作。","http://mp.weixin.qq.com/s?__biz=MzU4NTY4Mzg1Mw==&mid=2247522414&idx=1&sn=26b9b74dbbe0f8b75568d9d9e2966dbc&chksm=fd841e8ccaf3979ac2811e7a0d47fa6ab49e9a081fb07e339fb249c80c828f42cc7beeadca91#rd","1664114949","1664114949"]
     # write_csv(path, data)
-    
+    path = './results'
+    out_path= './result.txt'
+    csvtomd(path, out_path)
