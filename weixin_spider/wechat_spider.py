@@ -1,3 +1,9 @@
+'''
+Author: CalmCapK
+Date: 2022-09-26 03:18:24
+LastEditors: CalmCapK
+LastEditTime: 2022-10-12 01:12:12
+'''
 import csv
 from fake_useragent import UserAgent
 import random

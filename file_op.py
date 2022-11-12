@@ -1,8 +1,8 @@
 '''
 Author: CalmCapK
 Date: 2022-09-20 00:25:06
-LastEditors: CalmCapK
-LastEditTime: 2022-09-25 20:42:39
+LastEditors: Please set LastEditors
+LastEditTime: 2022-11-09 08:33:08
 '''
 import os
 import shutil
@@ -48,6 +48,7 @@ def change_file_name(folder_path):
     files = os.listdir(folder_path)
     cnt = 0
     #wenti= [str(i)+'.jpg' for i in range(70, 99)]
+    files = sorted(files)
     for file in files:
         #if file in wenti:
         print(file) 
@@ -124,7 +125,7 @@ def write_csv(path, data):
             spamwriter.writerow(d)
     
 ################################# 介绍5：xlsx #####################################
-import pandas as pd
+# import pandas as pd
 
 def read_xlsx_row_by_index(path, index):
     hdr = pd.read_excel(path, index_col=0) #index_col=0 不读首列序号
@@ -140,7 +141,7 @@ def write_xlsx(path, data):
     df = pd.DataFrame(data)
     df.to_excel(path)
 
-from openpyxl import load_workbook
+# from openpyxl import load_workbook
 
 def read_xlsx_by_sheetindex(path, sheet_index):
     wb = load_workbook(path)
@@ -154,7 +155,7 @@ def read_xlsx_by_sheetindex(path, sheet_index):
     return data
 
 ################################# 介绍6：yml #####################################
-import yaml
+# import yaml
 
 def read_yml(path):
     with open(path, "r", encoding='utf-8') as cd:
@@ -241,7 +242,8 @@ def test_fun(op):
         print(data)
     if op == 11: #厨房笔记
         #folder_path = 'D:\\myfile\\code\\toolkit\\test_file_op\\change_name'
-        folder_path = 'D:\myfile\code\\blog\source\\assets\img\cook\process\w10'
+        #folder_path = 'D:\myfile\code\\blog\source\\assets\img\cook\process\w13'
+        folder_path = 'D:\myfile\code\\blog\source\\assets\img\cook\process\w14_'
         change_file_name(folder_path)
     if op == 12:
         old_dir = 'D:\\myfile\\code\\toolkit\\test_file_op'
