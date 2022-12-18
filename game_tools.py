@@ -37,7 +37,7 @@ def cal_shengyiwu(file_path):
     print(len(data_1), len(data_2), len(data_3), len(data_4), len(data_5))
 
     cnt = 0
-    with open('res.csv', 'a+', newline='') as csvfile:
+    with open('res2.csv', 'a+', newline='') as csvfile:
         spamwriter = csv.writer(csvfile)
         spamwriter.writerow(['序号', 1, 2, 3, 4, 5, '角斗士', '乐园', '战狂', '宗室', '暴击', '爆伤', '攻击', '暴击实际', '暴击魈', '暴击两倍', '暴击魈两倍', '爆伤实际', '爆伤甘雨', '差距', '差距魈', '差距甘雨'])
         for d1 in data_1:
@@ -60,5 +60,5 @@ def cal_shengyiwu(file_path):
 
 
 if __name__=="__main__":    
-    path = './yuanshen2.txt'
+    path = './yuanshen.txt'
     cal_shengyiwu(path)

@@ -2,7 +2,7 @@
 Author: CalmCapK
 Date: 2022-09-20 00:25:06
 LastEditors: Please set LastEditors
-LastEditTime: 2022-11-09 08:33:08
+LastEditTime: 2022-12-18 19:32:38
 '''
 import os
 import shutil
@@ -242,8 +242,7 @@ def test_fun(op):
         print(data)
     if op == 11: #厨房笔记
         #folder_path = 'D:\\myfile\\code\\toolkit\\test_file_op\\change_name'
-        #folder_path = 'D:\myfile\code\\blog\source\\assets\img\cook\process\w13'
-        folder_path = 'D:\myfile\code\\blog\source\\assets\img\cook\process\w14_'
+        folder_path = 'D:\myfile\code\\blog\source\\assets\img\cook\process\w19'
         change_file_name(folder_path)
     if op == 12:
         old_dir = 'D:\\myfile\\code\\toolkit\\test_file_op'
